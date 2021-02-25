@@ -26,4 +26,6 @@ console.log(dom.class.has(test,"blue"));
 dom.on(test,"click",()=>{
   console.log("click");
 })
-console.log(dom.find(test));
+// console.log(dom.find(test));
+const each=dom.find("#each")
+dom.each(dom.children(each),(node)=>console.log(node))

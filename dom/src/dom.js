@@ -119,7 +119,20 @@ var dom = {
       x=x.previousSibling
     }
     return x
+  },
+  each(nodeList,fn){
+    for (let i = 0; i < nodeList.length; i++) {
+      fn.call(null,nodeList[i])
+    }
+  },
+  index(node){
+    const list=dom.children(node.parentNode)
+    for (let i = 0; i < list.length; i++) {
+      if(list[i]===node)return i
+    }
+    return undefined
   }
+
 
 }
 window.dom = dom
