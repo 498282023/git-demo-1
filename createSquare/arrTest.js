@@ -1,0 +1,19 @@
+// let arr = [0,1,2,2,3,3,3,4,4,4,4,6]
+// let arr2 = arr.map(v=>{
+//   return ['周日', '周一', '周二', '周三','周四','周五','周六'][v]
+// })
+// console.log(arr2) // ['周日', '周一', '周二', '周二', '周三', '周三', '周三', '周四', '周四', '周四', '周四','周六']
+
+
+// let scores = [95,91,59,55,42,82,72,85,67,66,55,91]
+// let scores2 = scores.filter(v=>v>60)
+// console.log(scores2) //  [95,91,82,72,85,67,66, 91]
+
+// let scores = [95,91,59,55,42,82,72,85,67,66,55,91]
+// let sum = scores.reduce((sum, n)=>{
+//   return n%2==0?sum:sum+n
+// },0)
+// console.log(sum) // 奇数之和：598 
+
+var fn1=new Function('x','y','console.log(\'hi\');return x+y')
+fn1(1,3)
