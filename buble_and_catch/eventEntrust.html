@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="div1">
+    <span>span</span>
+    <button data-id="1">click 1</button><button data-id="2">click 2</button><button>click 3</button><button>click 4</button><button>click
+      5</button><button>click 6</button><button>click 7</button><button>click 8</button><button>click
+      9</button><button>click 10</button><button>click 11</button><button>click 12</button><button>click
+      13</button><button>click 14</button><button>click 15</button><button>click 16</button><button>click
+      17</button><button>click 18</button><button>click 19</button><button>click 20</button><button>click
+      21</button><button>click 22</button><button>click 23</button><button>click 24</button><button>click
+      25</button><button>click 26</button><button>click 27</button><button>click 28</button><button>click
+      29</button><button>click 30</button><button>click 31</button><button>click 32</button><button>click
+      33</button><button>click 34</button><button>click 35</button><button>click 36</button><button>click
+      37</button><button>click 38</button><button>click 39</button><button>click 40</button><button>click
+      41</button><button>click 42</button><button>click 43</button><button>click 44</button><button>click
+      45</button><button>click 46</button><button>click 47</button><button>click 48</button><button>click
+      49</button><button>click 50</button>
+  </div>
+  <script>
+    div1.addEventListener("click",(e)=>{
+      const t=e.target;
+      if(t.tagName.toLowerCase()==="button"){
+        console.log(`button被点击了 data-id是${t.dataset.id}`);
+      }
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="div1">
+  </div>
+  <script>
+    for (let i = 0; i < 100; i++) {
+      const button = document.createElement("button")
+      button.textContent = "click "+i
+      div1.appendChild(button)
+    }
+    // div1.addEventListener("click", (e) => {
+    //   if(e.target.tagName.toLowerCase()==="button"){
+    //     console.log(1);
+    //   }
+    // })
+    on("click", "#div1", "button", (e) => {
+      console.log(e.target.textContent+ "被点击了");
+    })
+    function on(eventName, element, selector, fn) {
+      if (!(element instanceof Element)) {
+        element = document.querySelector(element)
+      }
+      element.addEventListener(eventName, (e) => {
+        const t = e.target
+        if (t.matches(selector)) fn(e)
+      })
+    }
+  </script>
+</body>
+
+</html>
