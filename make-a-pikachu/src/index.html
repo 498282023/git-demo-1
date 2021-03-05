@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>画个皮卡丘</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+    }
+    #buttons{
+      margin-top: 20px;
+      width: 300px;
+      display: flex;
+      justify-content: space-around;
+    }
+    #buttons>button{
+      background-color: #0082FC;
+      border: none;
+      padding: 5px 10px;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #html {
+      width: 100%;
+      height: 50vh;
+      position: fixed;
+    }
+
+    #demo {
+      padding: 20px;
+      width: 100%;
+      height: 50vh;
+      overflow-y: auto;
+      background-color: #fff;
+    }
+
+    #demo2 {
+      display: none;
+    }
+
+    @keyframes wave {
+      0% {
+        transform: rotate(15deg);
+      }
+
+      100% {
+        transform: rotate(-15deg);
+      }
+
+      @keyframes close {
+        0% {
+          height: 280px;
+        }
+
+        100% {
+          height: 250px;
+        }
+      }
+    }
+
+    @keyframes moveEyes {
+      0% {
+        transform: translate(0px);
+      }
+
+      100% {
+        transform: translate(13px, 0px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="demo"></div>
+  <style id="demo2"></style>
+  <div id="buttons">
+    <button id=playBtn>开始</button>
+    <button id=pauseBtn>暂停</button>
+    <button id=slowBtn>慢速</button>
+    <button id=normalBtn>中速</button>
+    <button id=fastBtn>快速</button>
+    <button id=resetBtn>重置</button>
+  </div>
+  <div id="html">
+    <div class="ski">
+      <div class="eye left"></div>
+      <div class="eye right"></div>
+      <div class="nose">
+        <div class="yuan"></div>
+      </div>
+      <div class="face left"></div>
+      <div class="face right"></div>
+      <div class="mouth">
+        <div class="up">
+          <div class="lip left"></div>
+          <div class="lip right"></div>
+        </div>
+        <div class="down">
+          <div class="yuan1">
+            <div class="tough"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <audio id="sound" src="./sound.mp3"></audio>
+  <script src="main.js"></script>
+</body>
+
+</html>
