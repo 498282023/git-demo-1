@@ -14,8 +14,7 @@ module.exports = app => {
   router.delete('/article/class', controller.article.deleteClass);
   router.put('/article/class', controller.article.updateClass);
 
-  router.get('/article/getArticleList', controller.article.getArticleList);
-  router.get('/article/getArticleById', controller.article.getArticleById);
+  router.get('/article/getArticle', controller.article.getArticle);
   router.post('/article/addArticle', controller.article.addArticle);
   router.put('/article/updateArticle', controller.article.updateArticle);
   router.delete('/article/deleteArticle', controller.article.deleteArticle);

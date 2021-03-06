@@ -25,7 +25,6 @@ class HomeController extends Controller {
       //登录成功
       // 1.保存用户信息
       this.ctx.session.token = result[0].username;
-
       this.ctx.body = this.ctx.responseData("登录成功", 200, result[0])
     } else {
       this.ctx.body = this.ctx.responseData("登录失败", 400, null)

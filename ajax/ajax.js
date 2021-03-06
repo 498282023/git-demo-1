@@ -19,7 +19,7 @@
 //   fail(req,stutas){}
 // })
 
-var ajax = function (method, url) {
+var ajax = function (method, url,data) {
   return new Promise((resolve, reject) => {
     const request = new XMLHttpRequest()
     request.open(method, url)
@@ -32,7 +32,7 @@ var ajax = function (method, url) {
         }
       }
     }
-    request.send()
+    request.send(data)
   })
 }
 

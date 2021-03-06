@@ -20,9 +20,6 @@ class ArticleController extends Controller {
         }
       })
     })
-    console.log(data);
-    console.log(article_data);
-
     if (data.length === 0) return ctx.body = ctx.responseData("请求的资源不存在", 404)
     ctx.body = ctx.responseData("success", 200, data)
   }
@@ -86,13 +83,22 @@ class ArticleController extends Controller {
     if (data.affectedRows < 1) return ctx.body = ctx.responseData("请求的资源不存在", 404)
     ctx.body = ctx.responseData("修改成功", 201, result)
   }
+
   /**
-  * 列表接口
+  * 文章接口
   */
   //获取文章列表
-  async getArticleList() {
+  async getArticle() {
     const { ctx, app } = this;
-    const data = await app.mysql.query("select id,title,class_id,create_time from cms_article")
+    const query=ctx.query
+    let data;
+    if(query.id){
+      data = await app.mysql.query(`select id,title,class_id,create_time,content from cms_article where id=${query.id}`)
+    }else if(query.class_id){
+      data = await app.mysql.query(`select id,title,class_id,create_time from cms_article where class_id=${query.class_id}`)
+    }else{
+      data = await app.mysql.query("select id,title,class_id,create_time from cms_article")
+    }
     ctx.body = ctx.responseData("success", 200, data)
   }
 
@@ -100,7 +106,6 @@ class ArticleController extends Controller {
   async getArticleById() {
     const { ctx, app } = this;
     const query = ctx.query;
-    console.log(query);
     if (!query.id) return ctx.body = ctx.responseData("缺少参数 id", 400)
     const data = await app.mysql.select("cms_article", {
       where: { id: query.id },
@@ -160,39 +165,39 @@ class ArticleController extends Controller {
     ctx.body = ctx.responseData("success", 201, paramData)
   }
   //文章暂存
-  async tempSaveArticle() {
-    const { ctx, app } = this;
-    const { title, content } = ctx.request.body;
-    const { id: article_id, class_id } = ctx.params
-    if (!article_id) return ctx.body = ctx.responseData("缺少参数 id", 400)
-    if (!class_id) return ctx.body = ctx.responseData("缺少参数 class_id", 400)
-    if (!title) return ctx.body = ctx.responseData("缺少参数 title", 400)
-    if (!content) return ctx.body = ctx.responseData("缺少参数 content", 400)
-    const insertData = {
-      article_id, class_id, title, content,
-    }
+  // async tempSaveArticle() {
+  //   const { ctx, app } = this;
+  //   const { title, content } = ctx.request.body;
+  //   const { id: article_id, class_id } = ctx.params
+  //   if (!article_id) return ctx.body = ctx.responseData("缺少参数 id", 400)
+  //   if (!class_id) return ctx.body = ctx.responseData("缺少参数 class_id", 400)
+  //   if (!title) return ctx.body = ctx.responseData("缺少参数 title", 400)
+  //   if (!content) return ctx.body = ctx.responseData("缺少参数 content", 400)
+  //   const insertData = {
+  //     article_id, class_id, title, content,
+  //   }
 
-    //判断暂存文章是否存在
-    const data = await app.mysql.select("cms_article_temp", {
-      where: { article_id }
-    })
-    //如果不存在,新建文章
-    if (data.length < 1) {
-      const data1 = await app.mysql.insert("cms_article_temp", insertData)
-      if (data1.affectedRows < 1) return ctx.body = ctx.responseData("插入文章失败", 500)
-      ctx.body = ctx.responseData("添加成功", 200, insertData)
-    }
+  //   //判断暂存文章是否存在
+  //   const data = await app.mysql.select("cms_article_temp", {
+  //     where: { article_id }
+  //   })
+  //   //如果不存在,新建文章
+  //   if (data.length < 1) {
+  //     const data1 = await app.mysql.insert("cms_article_temp", insertData)
+  //     if (data1.affectedRows < 1) return ctx.body = ctx.responseData("插入文章失败", 500)
+  //     ctx.body = ctx.responseData("添加成功", 200, insertData)
+  //   }
 
-    //如果存在,更新文章
-    if (data.length === 1) {
-      const data1 = await app.mysql.update("cms_article_temp", insertData, {
-        where: { article_id: data[0].id }
-      })
-      if (data1.affectedRows < 1) return ctx.body = ctx.responseData("更新文章失败", 500)
-      ctx.body = ctx.responseData("更新成功", 200, insertData)
-    }
+  //   //如果存在,更新文章
+  //   if (data.length === 1) {
+  //     const data1 = await app.mysql.update("cms_article_temp", insertData, {
+  //       where: { article_id: data[0].id }
+  //     })
+  //     if (data1.affectedRows < 1) return ctx.body = ctx.responseData("更新文章失败", 500)
+  //     ctx.body = ctx.responseData("更新成功", 200, insertData)
+  //   }
 
-  }
+  // }
 
   /**
    * 前端接口
