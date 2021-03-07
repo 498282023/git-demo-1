@@ -2,23 +2,24 @@ import $ from "jquery"
 import "./app1.css"
 import Model from "./base/Model.js";
 import View from "./base/View";
+import EventBus from "./base/EventBus";
 
-const eventBus = $(window)
 
 const m = new Model({
   data: {
-    n: parseInt(localStorage.getItem("n")) || 100
+    n: parseFloat(localStorage.getItem("n")) || 100
   },
   update: function (data) {
     Object.assign(m.data, data)
-    eventBus.trigger("m:updated")
+    m.trigger("m:updated")
     localStorage.setItem("n", m.data.n)
   }
 })
-
-const view = {
-  el: null,
-  html: `
+const init = (el) => {
+  new View({
+    el: el,
+    data:m.data,
+    html: `
     <div>
         <div  class="output">
             <span id=number>{{n}}</span>
@@ -31,47 +32,32 @@ const view = {
           </div>
     </div>
   `,
-  init(container) {
-    view.el=$(container)
-    view.render(m.data.n)
-    view.autoBindEvents()
-    eventBus.on("m:updated", () => {
-      view.render(m.data.n)
-    })
-  },
-  render(n) {
-    if (view.el.children().length !== 0) view.el.empty()
-    view.el = $(view.html.replace("{{n}}", n.toString()))
-        .appendTo($(view.el))
-  },
-  events: {
-    'click #add1': 'add',
-    'click #minus1': 'minus',
-    'click #mul2': 'mul',
-    'click #divide2': 'div',
-  },
-  add() {
-    m.update({n: m.data.n + 1})
-  },
-  minus() {
-    m.update({n: m.data.n - 1})
-  },
-  mul() {
-    m.update({n: m.data.n * 2})
-  },
-  div() {
-    m.update({n: m.data.n / 2})
-  },
-  autoBindEvents() {
-    for (let key in view.events) {
-      const value = view[view.events[key]]
-      const spaceIndex = key.indexOf(' ')
-      const part1 = key.slice(0, spaceIndex)
-      const part2 = key.slice(spaceIndex + 1)
-      view.el.on(part1, part2, value)
-    }
-  }
+    render(data) {
+      const n=data.n
+      if (this.el.children().length !== 0) this.el.empty()
+      this.el = $(this.html.replace("{{n}}", n.toString()))
+          .appendTo($(this.el))
+    },
+    events: {
+      'click #add1': 'add',
+      'click #minus1': 'minus',
+      'click #mul2': 'mul',
+      'click #divide2': 'div',
+    },
+    add() {
+      m.update({n: m.data.n + 1})
+    },
+    minus() {
+      m.update({n: m.data.n - 1})
+    },
+    mul() {
+      m.update({n: m.data.n * 2})
+    },
+    div() {
+      m.update({n: m.data.n / 2})
+    },
+  })
 }
 
-export default view
+export default init
 
