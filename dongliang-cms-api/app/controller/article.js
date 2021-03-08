@@ -57,13 +57,14 @@ class ArticleController extends Controller {
     const { ctx, app } = this;
     const reqBody = ctx.request.body;
     if (!reqBody.id) return ctx.body = ctx.responseData("缺少参数 id", 400)
+    if (reqBody.id<0) return ctx.body = ctx.responseData("该id不可删除", 400)
     const data = await app.mysql.delete("cms_article_class", {
       id: reqBody.id
     })
     const result = {
       id: reqBody.id,
     }
-    if (data.affectedRows < 1) return ctx.body = ctx.responseData("请求的资源不存在", 410)
+    if (data.affectedRows < 1) return ctx.body = ctx.responseData("请求的资源不存在", 404)
     ctx.body = ctx.responseData("删除成功", 204, result)
   }
   //修改分类
@@ -93,11 +94,11 @@ class ArticleController extends Controller {
     const query=ctx.query
     let data;
     if(query.id){
-      data = await app.mysql.query(`select id,title,class_id,create_time,content from cms_article where id=${query.id}`)
+      data = await app.mysql.query(`select * from cms_article as a,cms_article_class as b where a.class_id=b.id and a.id=${query.id}`)
     }else if(query.class_id){
       data = await app.mysql.query(`select id,title,class_id,create_time from cms_article where class_id=${query.class_id}`)
     }else{
-      data = await app.mysql.query("select id,title,class_id,create_time from cms_article")
+      data = await app.mysql.query(`SELECT a.id,title,class_id,class_name,a.create_time FROM cms_article AS a,cms_article_class AS b where a.class_id=b.id`)
     }
     ctx.body = ctx.responseData("success", 200, data)
   }
@@ -107,9 +108,7 @@ class ArticleController extends Controller {
     const { ctx, app } = this;
     const query = ctx.query;
     if (!query.id) return ctx.body = ctx.responseData("缺少参数 id", 400)
-    const data = await app.mysql.select("cms_article", {
-      where: { id: query.id },
-    })
+    const data = await app.mysql.query(`select * from cms_article as a,cms_article_class as b where a.class_id=b.id`)
     if (data.length === 0) return ctx.body = ctx.responseData("请求的资源不存在", 404)
     ctx.body = ctx.responseData("success", 200, data[0])
   }
