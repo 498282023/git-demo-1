@@ -4,13 +4,17 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   mode: 'development',
   entry: './src/index.js',
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: './dist',
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[contenthash].js',
   },
   plugins: [new HtmlWebpackPlugin({
-    title: 'fangfang',
-    template: 'src/assets/index.html'
+    template: 'src/assets/index.html',
+    title:"XDML"
   })],
   module: {
     rules: [
