@@ -13,10 +13,10 @@ class ArticleController extends Controller {
     const data = Array.from(await app.mysql.select("cms_article_class"))
     const article_data = Array.from(await app.mysql.query("select id,class_id from cms_article"))
     // 该分类下面的文章数量
-    data.forEach(item1=>{
-      article_data.forEach(item2=>{
-        if(item2.class_id===item1.id){
-          item1.article_total=item1.article_total?item1.article_total+1:1
+    data.forEach(item1 => {
+      article_data.forEach(item2 => {
+        if (item2.class_id === item1.id) {
+          item1.article_total = item1.article_total ? item1.article_total + 1 : 1
         }
       })
     })
@@ -57,7 +57,7 @@ class ArticleController extends Controller {
     const { ctx, app } = this;
     const reqBody = ctx.request.body;
     if (!reqBody.id) return ctx.body = ctx.responseData("缺少参数 id", 400)
-    if (reqBody.id<0) return ctx.body = ctx.responseData("该id不可删除", 400)
+    if (reqBody.id < 0) return ctx.body = ctx.responseData("该id不可删除", 400)
     const data = await app.mysql.delete("cms_article_class", {
       id: reqBody.id
     })
@@ -91,14 +91,42 @@ class ArticleController extends Controller {
   //获取文章列表
   async getArticle() {
     const { ctx, app } = this;
-    const query=ctx.query
+    const query = {
+      id: ctx.query.id,
+      class_id: ctx.query.class_id,
+      page_num: ctx.query.page_num,
+      page_size: ctx.query.page_size,
+    }
     let data;
-    if(query.id){
-      data = await app.mysql.query(`select * from cms_article as a,cms_article_class as b where a.class_id=b.id and a.id=${query.id}`)
-    }else if(query.class_id){
-      data = await app.mysql.query(`select id,title,class_id,create_time from cms_article where class_id=${query.class_id}`)
-    }else{
-      data = await app.mysql.query(`SELECT a.id,title,class_id,class_name,a.create_time FROM cms_article AS a,cms_article_class AS b where a.class_id=b.id`)
+    let limit = ``
+   
+    if (query.page_size && !query.page_num) return ctx.body = ctx.responseData("page_num 不能为空", 400)
+    else if (!query.page_size && query.page_num) return ctx.body = ctx.responseData("page_size 不能为空", 400)
+    else if (query.page_size && query.page_num) {
+      let start = Math.abs((query.page_num - 1) * query.page_size)
+      let end = Math.abs((query.page_num) * query.page_size || 5)
+      limit = `limit ${start},${end};`
+    }
+    const queryStr = [
+      `select * 
+      from cms_article as a,cms_article_class as b 
+      where a.class_id=b.id and a.id=${query.id} ${limit}
+      `,
+      `select id,title,class_id,create_time 
+      from cms_article 
+      where class_id=${query.class_id} ${limit}
+      `,
+      `SELECT a.id,a.content,title,class_id,class_name,a.create_time 
+      FROM cms_article AS a,cms_article_class AS b 
+      where a.class_id=b.id ${limit}
+      `
+    ]
+    if (query.id) {
+      data = await app.mysql.query(queryStr[0])
+    } else if (query.class_id) {
+      data = await app.mysql.query(queryStr[1])
+    } else {
+      data = await app.mysql.query(queryStr[2])
     }
     ctx.body = ctx.responseData("success", 200, data)
   }
@@ -156,7 +184,7 @@ class ArticleController extends Controller {
       content: reqBody.content,
     }
     if (!paramData.id) return ctx.body = ctx.responseData("缺少参数 id", 400)
-    if (!paramData.class_id) return ctx.body = ctx.responseData("缺少参数 class_id", 400)
+    // if (!paramData.class_id) return ctx.body = ctx.responseData("缺少参数 class_id", 400)
     if (!paramData.title) return ctx.body = ctx.responseData("缺少参数 title", 400)
     if (!paramData.content) return ctx.body = ctx.responseData("缺少参数 content", 400)
     const data = await app.mysql.update("cms_article", paramData)
